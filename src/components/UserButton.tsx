@@ -2,10 +2,10 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { signIn, signOut } from "next-auth/react";
-import { User } from "@prisma/client";
+import { User } from "@auth/core/types";
 
 interface UserButtonProps {
-	user: User;
+	user: User | undefined;
 }
 
 function UserButton({ user }: UserButtonProps) {
