@@ -24,6 +24,8 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Booking   Booking? @relation(fields: [bookingId], references: [id])
+  bookingId String?
 }
 
 model Account {
@@ -63,4 +65,46 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Problem {
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  difficulty  Difficulty
+  testcases   TestCase[]
+  timeLimit   Int        @default(1) // New field to specify time limit in seconds
+  constraints String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  Booking Booking[]
+}
+
+model TestCase {
+  id        String  @id @default(cuid())
+  input     String
+  output    String
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id])
+}
+
+model Booking {
+  id           String    @id @default(cuid())
+  title        String
+  description  String
+  date         DateTime
+  startTime    DateTime
+  endTime      DateTime
+  participants User[] // Added field to track participants of the mock algo interview
+  problems     Problem[] // Added field to associate problems with the mock algo interview
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import { signIn, signOut } from "next-auth/react";
 import { User } from "@auth/core/types";
+import Link from "next/link";
 
 interface UserButtonProps {
 	user: User | undefined;
@@ -13,6 +14,9 @@ function UserButton({ user }: UserButtonProps) {
 		return (
 			<>
 				<h1>{user.name}</h1>
+				<Button asChild>
+					<Link href={"/dashboard"}>Dashboard</Link>
+				</Button>
 				<Button onClick={() => signOut()}>Sign out</Button>
 			</>
 		);
