@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,12 +14,13 @@ model User {
   emailVerified DateTime?
   image         String?
   accounts      Account[]
+  password      String?
   sessions      Session[]
+  bookingsUser1 Booking[] @relation("User1Bookings")
+  bookingsUser2 Booking[] @relation("User2Bookings")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Booking   Booking? @relation(fields: [bookingId], references: [id])
-  bookingId String?
 }
 
 model Account {
@@ -73,38 +68,32 @@ enum Difficulty {
   HARD
 }
 
-model Problem {
-  id          String     @id @default(cuid())
-  title       String
-  description String
-  difficulty  Difficulty
-  testcases   TestCase[]
-  timeLimit   Int        @default(1) // New field to specify time limit in seconds
-  constraints String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  Booking Booking[]
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  CANCELLED
+  COMPLETED
 }
 
-model TestCase {
-  id        String  @id @default(cuid())
-  input     String
-  output    String
-  problemId String
-  problem   Problem @relation(fields: [problemId], references: [id])
+enum BookingDifficulty {
+  NOVICE
+  INTERMEDIATE
+  EXPERT
 }
 
 model Booking {
-  id           String    @id @default(cuid())
-  title        String
-  description  String
-  date         DateTime
-  startTime    DateTime
-  endTime      DateTime
-  participants User[] // Added field to track participants of the mock algo interview
-  problems     Problem[] // Added field to associate problems with the mock algo interview
+  id         String            @id @default(cuid())
+  date       DateTime
+  startTime  DateTime
+  user1Id    String
+  difficulty BookingDifficulty @default(NOVICE)
+  user2Id    String?
+  problem1Id String?
+  problem2Id String?
+  status     BookingStatus     @default(PENDING)
+  user1      User              @relation("User1Bookings", fields: [user1Id], references: [id])
+  user2      User?             @relation("User2Bookings", fields: [user2Id], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@unique([user1Id, user2Id])
+  @@unique([problem1Id, problem2Id])
 }

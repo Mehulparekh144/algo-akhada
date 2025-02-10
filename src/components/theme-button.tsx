@@ -14,7 +14,7 @@ function ThemeButton() {
 	const { theme, setTheme } = useTheme();
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger className="flex items-center w-full gap-3">
+			<DropdownMenuTrigger className="flex items-center w-full gap-3 justify-between">
 				{theme === "dark" ? (
 					<>
 						<Moon /> Dark{" "}
