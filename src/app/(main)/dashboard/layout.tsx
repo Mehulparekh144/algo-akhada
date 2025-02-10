@@ -13,7 +13,7 @@ async function DashboardLayout({ children }: DashboardLayoutProps) {
 		<SidebarProvider>
 			<AppSidebar />
 			<SidebarTrigger className="absolute z-10 top-0 left-0 opacity-20 hover:opacity-100 transition-opacity" />
-			<div className="w-screen h-[calc(100vh-20px)]  pb-2 flex">{children}</div>
+			<div className="w-screen h-[calc(100vh-20px)] pb-2 flex">{children}</div>
 		</SidebarProvider>
 	);
 }

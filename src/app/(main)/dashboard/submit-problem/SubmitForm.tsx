@@ -17,12 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-} from "@/components/ui/card";
-import {
 	Select,
 	SelectContent,
 	SelectItem,
@@ -60,7 +54,7 @@ export default function SubmitForm() {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="h-full flex flex-col"
 			>
-				<div className="flex-grow grid grid-cols-3 gap-6 p-6 overflow-hidden">
+				<div className="flex-grow grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 p-6 overflow-hidden">
 					{/* First Column */}
 					<div className="flex flex-col p-2 space-y-4 overflow-y-auto pr-4">
 						<FormField

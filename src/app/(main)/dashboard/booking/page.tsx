@@ -10,13 +10,12 @@ export default async function BookingPage() {
 		redirect("/");
 	}
 	return (
-		<main className="min-h-screen flex flex-col w-full">
-			<h1 className="text-2xl font-bold p-4">Book an akhada</h1>
-			<div
-				className="flex-grow flex flex-col"
-				style={{ height: "calc(100vh - 4rem)" }}
-			>
-				<BookingForm />
+		<main className="min-h-screen flex w-full justify-center items-center">
+			<div className="w-full max-w-4xl px-16">
+				<h1 className="text-2xl font-bold">Book an akhada</h1>
+				<div className="flex flex-col">
+					<BookingForm />
+				</div>
 			</div>
 		</main>
 	);

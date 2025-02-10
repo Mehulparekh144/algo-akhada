@@ -66,6 +66,12 @@ export async function AppSidebar() {
 			<SidebarFooter className="p-4">
 				<SidebarMenu>
 					<SidebarMenuItem>
+						<ThemeButton />
+					</SidebarMenuItem>
+				</SidebarMenu>
+				<SidebarSeparator />
+				<SidebarMenu>
+					<SidebarMenuItem>
 						<UserSignoutDropdown user={session?.user} />
 					</SidebarMenuItem>
 				</SidebarMenu>
@@ -73,9 +79,3 @@ export async function AppSidebar() {
 		</Sidebar>
 	);
 }
-
-// <SidebarMenu>
-// 	<SidebarMenuItem>
-// 		<ThemeButton />
-// 	</SidebarMenuItem>
-// </SidebarMenu>;
