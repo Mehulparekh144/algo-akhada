@@ -9,11 +9,13 @@ import { redirect } from "next/navigation";
 export default async function CurrentBookingPage({
 	params,
 }: {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 }) {
 	const server = await auth();
 
-	const booking = await getBooking(params.id);
+	const { id } = await params;
+
+	const booking = await getBooking(id);
 	if (!booking) {
 		redirect("/");
 	}
