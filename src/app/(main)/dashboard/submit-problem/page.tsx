@@ -1,10 +1,10 @@
 import React from "react";
 import SubmitForm from "./SubmitForm";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { getUser } from "@/app/actions";
 
 export default async function SubmitFormPage() {
-	const session = await auth();
+	const session = await getUser();
 
 	if (!session) {
 		redirect("/");

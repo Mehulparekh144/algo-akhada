@@ -1,14 +1,14 @@
 import React from "react";
-import { auth } from "@/auth";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { getUser } from "@/app/actions";
 
 interface DashboardLayoutProps {
 	children: React.ReactNode;
 }
 
 async function DashboardLayout({ children }: DashboardLayoutProps) {
-	const session = await auth();
+	const server = getUser();
 	return (
 		<SidebarProvider>
 			<AppSidebar />
