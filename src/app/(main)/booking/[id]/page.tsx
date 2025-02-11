@@ -1,17 +1,20 @@
-import { auth } from "@/auth";
 import React from "react";
 import ProblemDescription from "./ProblemDescription";
 import CodeEditor from "./CodeEditor";
 import TestCases from "./TestCases";
 import { getBooking } from "./actions";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 
 export default async function CurrentBookingPage({
 	params,
 }: {
 	params: Promise<{ id: string }>;
 }) {
-	const server = await auth();
+	const server = await auth.api.getSession({
+		headers: await headers(),
+	});
 
 	const { id } = await params;
 

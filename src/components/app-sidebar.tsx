@@ -1,10 +1,8 @@
 import UserSignoutDropdown from "@/app/(main)/dashboard/UserSignoutDropdown";
-import { auth } from "@/auth";
 import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
-	SidebarGroup,
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
@@ -16,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { CodeSquare, Home, Medal, Settings } from "lucide-react";
 import Link from "next/link";
 import ThemeButton from "./theme-button";
-import { text } from "stream/consumers";
+import { getUser } from "@/app/actions";
 
 const MENU_ITEMS = [
 	{
@@ -42,7 +40,7 @@ const MENU_ITEMS = [
 ];
 
 export async function AppSidebar() {
-	const session = await auth();
+	const session = await getUser();
 	return (
 		<Sidebar variant="sidebar">
 			<SidebarHeader className={cn("text-2xl font-semibold", dmsans.className)}>

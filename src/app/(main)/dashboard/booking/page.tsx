@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import React from "react";
 import BookingForm from "./BookingForm";
+import { getUser } from "@/app/actions";
 
 export default async function BookingPage() {
-	const session = await auth();
+	const session = await getUser();
 
 	if (!session) {
 		redirect("/");

@@ -18,18 +18,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { authClient } from "@/lib/auth-client";
 import { signupSchema, SignupValues } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import React from "react";
 import { useForm } from "react-hook-form";
 
-interface SignupProps {
-	signup: (data: SignupValues) => void;
-}
-
-export default function Signup({ signup }: SignupProps) {
+export default function Signup() {
+	const { toast } = useToast();
+	const [loading, setLoading] = React.useState(false);
 	const form = useForm<SignupValues>({
 		resolver: zodResolver(signupSchema),
 		defaultValues: {
@@ -40,17 +40,32 @@ export default function Signup({ signup }: SignupProps) {
 	});
 
 	async function onSignup(data: SignupValues) {
-		try {
-			await signup(data);
-			window.location.href = "/signin";
-		} catch (error) {
-			console.error(error);
-			toast({
-				title: "Error",
-				description: "Failed to sign up",
-				variant: "destructive",
-			});
-		}
+		const { email, password, name } = data;
+		await authClient.signUp.email(
+			{
+				email,
+				password,
+				name,
+				callbackURL: "/signin",
+			},
+			{
+				onError(context) {
+					toast({
+						title: "Error",
+						description: context.error.message,
+						variant: "destructive",
+					});
+					setLoading(false);
+				},
+				onRequest: () => {
+					setLoading(true);
+				},
+				onSuccess: () => {
+					window.location.href = "/signin";
+					setLoading(false);
+				},
+			}
+		);
 	}
 
 	return (
@@ -111,7 +126,10 @@ export default function Signup({ signup }: SignupProps) {
 								</FormItem>
 							)}
 						/>
-						<Button className="w-full">Sign in</Button>
+						<Button className="w-full" disabled={loading}>
+							{loading && <Loader2 className="animate-spin" />}
+							Sign up
+						</Button>
 					</form>
 				</Form>
 			</CardContent>

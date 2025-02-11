@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import React from "react";
 import Signin from "./Signin";
+import { getUser } from "@/app/actions";
 
 export default async function SigninPage() {
-	const session = await auth();
+	const session = await getUser();
 
 	if (session) {
 		redirect("/dashboard");

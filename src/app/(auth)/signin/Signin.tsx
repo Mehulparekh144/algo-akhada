@@ -19,14 +19,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
+import { authClient } from "@/lib/auth-client";
 import { loginSchema, LoginValues } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GithubIcon } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { GithubIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
+import React from "react";
 import { useForm } from "react-hook-form";
 
 export default function Signin() {
+	const [loading, setLoading] = React.useState(false);
 	const form = useForm<LoginValues>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
@@ -36,12 +38,38 @@ export default function Signin() {
 	});
 
 	async function onSignin(data: LoginValues) {
+		const { email, password } = data;
+		await authClient.signIn.email(
+			{
+				email,
+				password,
+				callbackURL: "/dashboard",
+			},
+			{
+				onError(context) {
+					toast({
+						title: "Error",
+						description: context.error.message,
+						variant: "destructive",
+					});
+					setLoading(false);
+				},
+				onSuccess: () => {
+					setLoading(false);
+					window.location.href = "/dashboard";
+				},
+				onRequest: () => {
+					setLoading(true);
+				},
+			}
+		);
+	}
+
+	async function socialSignin() {
 		try {
-			await signIn("credentials", {
-				email: data.email,
-				password: data.password,
+			await authClient.signIn.social({
+				provider: "github",
 			});
-			window.location.href = "/dashboard";
 		} catch (error) {
 			console.error(error);
 		}
@@ -92,7 +120,10 @@ export default function Signin() {
 								</FormItem>
 							)}
 						/>
-						<Button className="w-full">Sign in</Button>
+						<Button className="w-full" disabled={loading}>
+							{loading && <Loader2 className="animate-spin" />}
+							Sign in
+						</Button>
 					</form>
 				</Form>
 				<div className="relative py-4">
@@ -103,7 +134,7 @@ export default function Signin() {
 				</div>
 				<Button
 					variant={"secondary"}
-					onClick={() => signIn("github")}
+					onClick={socialSignin}
 					className="w-full"
 					type="button"
 				>

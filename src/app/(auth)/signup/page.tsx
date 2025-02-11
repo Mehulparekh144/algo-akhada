@@ -1,11 +1,10 @@
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import React from "react";
 import Signup from "./Signup";
-import { signup } from "./actions";
+import { getUser } from "@/app/actions";
 
 export default async function SigninPage() {
-	const session = await auth();
+	const session = await getUser();
 
 	if (session) {
 		redirect("/dashboard");
@@ -13,7 +12,7 @@ export default async function SigninPage() {
 
 	return (
 		<div className="border min-h-screen flex justify-center items-center">
-			<Signup signup={signup} />
+			<Signup />
 		</div>
 	);
 }

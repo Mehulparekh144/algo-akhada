@@ -9,10 +9,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { LogOutIcon } from "lucide-react";
-import { signOut } from "next-auth/react";
-import { User } from "next-auth";
+import { User } from "better-auth";
+import { authClient } from "@/lib/auth-client";
 
 const FALLBACK_STRING = "https://github.com/shadcn.png";
+
+async function signOut() {
+	await authClient.signOut({
+		fetchOptions: {
+			onResponse: () => {
+				window.location.href = "/signin";
+			},
+		},
+	});
+}
 
 function UserSignoutDropdown({ user }: { user: User | undefined }) {
 	return (
@@ -34,11 +44,7 @@ function UserSignoutDropdown({ user }: { user: User | undefined }) {
 				className="w-[--radix-popper-anchor-width]"
 			>
 				<DropdownMenuItem>
-					<Button
-						className="w-full"
-						variant={"ghost"}
-						onClick={() => signOut()}
-					>
+					<Button className="w-full" variant={"ghost"} onClick={signOut}>
 						Signout <LogOutIcon className="ml-auto" />{" "}
 					</Button>
 				</DropdownMenuItem>
