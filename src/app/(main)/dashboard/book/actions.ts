@@ -111,7 +111,7 @@ export async function createBooking(values: BookingValues) {
 		},
 	});
 
-	return booking;
+	return booking.id;
 }
 
 function getValidRandomProblem(

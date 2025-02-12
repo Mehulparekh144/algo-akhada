@@ -39,8 +39,6 @@ model Booking {
   user1      User              @relation("User1Bookings", fields: [user1Id], references: [id])
   user2      User?             @relation("User2Bookings", fields: [user2Id], references: [id])
 
-  @@unique([user1Id, user2Id])
-  @@unique([problem1Id, problem2Id])
   @@map("booking")
 }
 
