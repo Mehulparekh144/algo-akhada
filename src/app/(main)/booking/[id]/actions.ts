@@ -1,7 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { getUniqueProblem } from "@/lib/problemsClient"
+
 
 
 export async function getBooking(id: string) {
@@ -16,6 +16,10 @@ export async function getBooking(id: string) {
   return booking
 }
 
-export async function getProblemById(id: string) {
-  return await getUniqueProblem(id);
+export async function getProblemById(slug: string) {
+  return await prisma.problem.findUnique({
+    where: {
+      titleSlug: slug
+    }
+  })
 }

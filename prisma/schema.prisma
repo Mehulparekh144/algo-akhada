@@ -8,9 +8,25 @@ datasource db {
 }
 
 enum Difficulty {
-  EASY
-  MEDIUM
-  HARD
+  Easy
+  Medium
+  Hard
+}
+
+model Problem {
+  titleSlug        String     @id
+  title            String?
+  difficulty       Difficulty @default(Easy)
+  acRate           Float?
+  link             String?
+  question         String?
+  exampleTestcases String?
+  hints            String[]   @default([])
+  testCases        String[]   @default([])
+  bookingsUser1    Booking[]  @relation("Problem1Bookings")
+  bookingsUser2    Booking[]  @relation("Problem2Bookings")
+
+  @@map("problem")
 }
 
 enum BookingStatus {
@@ -35,9 +51,13 @@ model Booking {
   user2Id    String?
   problem1Id String?
   problem2Id String?
+  bothJoined Boolean           @default(false)
   status     BookingStatus     @default(PENDING)
   user1      User              @relation("User1Bookings", fields: [user1Id], references: [id])
   user2      User?             @relation("User2Bookings", fields: [user2Id], references: [id])
+
+  problem1 Problem? @relation("Problem1Bookings", fields: [problem1Id], references: [titleSlug])
+  problem2 Problem? @relation("Problem2Bookings", fields: [problem2Id], references: [titleSlug])
 
   @@map("booking")
 }

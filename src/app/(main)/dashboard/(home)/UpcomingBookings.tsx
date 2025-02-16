@@ -98,76 +98,86 @@ export default async function UpcomingBookings({
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHead>Booking Number</TableHead>
-							<TableHead>Problem to ask</TableHead>
-							<TableHead>Status</TableHead>
-							<TableHead>Date</TableHead>
-							<TableHead>Time</TableHead>
-							<TableHead>Action</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{bookings?.map((booking, idx) => {
-							const diff = getDifferenceInMS(booking.date, new Date());
-							const { days, hours, minutes, seconds } = getDifferencesInAll(
-								booking.date,
-								new Date()
-							);
+				{!bookings?.length ? (
+					<div className="text-center">
+						<p className="text-muted-foreground text-sm">
+							No upcoming bookings
+						</p>
+					</div>
+				) : (
+					<Table>
+						<TableHeader>
+							<TableRow>
+								<TableHead>Booking Number</TableHead>
+								<TableHead>Problem to ask</TableHead>
+								<TableHead>Status</TableHead>
+								<TableHead>Date</TableHead>
+								<TableHead>Time</TableHead>
+								<TableHead>Action</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							{bookings?.map((booking, idx) => {
+								const diff = getDifferenceInMS(booking.date, new Date());
+								const { days, hours, minutes, seconds } = getDifferencesInAll(
+									booking.date,
+									new Date()
+								);
 
-							return (
-								<TableRow key={booking.id}>
-									<TableCell>{idx + 1}</TableCell>
-									<TableCell>
-										{slugToTitle(getProblem(booking, user.id))}
-									</TableCell>
-									<TableCell>
-										<Badge variant={STATUS_COLORS[booking.status].variant}>
-											{booking.status}
-										</Badge>
-									</TableCell>
-									<TableCell>
-										{formatDate(booking.date, "MMM d yyyy")}{" "}
-									</TableCell>
-									<TableCell>
-										{formatDate(booking.startTime, "HH:mm aa")}
-									</TableCell>
-									<TableCell>
-										<Button
-											disabled={diff < 0 || booking.status === "CANCELLED"}
-											size={"sm"}
-											variant={"link"}
-										>
-											<Link href={`/booking/${booking.id}`}>
-												{diff > 0 ? (
-													<>
-														{days > 0
-															? `Starts in ${days} day${days > 1 ? "s" : ""}`
-															: hours > 0
-															? `Starts in ${hours} hour${hours > 1 ? "s" : ""}`
-															: minutes > 0
-															? `Starts in ${minutes} minute${
-																	minutes > 1 ? "s" : ""
-															  }`
-															: `Starts in ${seconds} second${
-																	seconds > 1 ? "s" : ""
-															  }`}
-													</>
-												) : diff === 0 ? (
-													"Join"
-												) : (
-													"Cancelled"
-												)}
-											</Link>
-										</Button>
-									</TableCell>
-								</TableRow>
-							);
-						})}
-					</TableBody>
-				</Table>
+								return (
+									<TableRow key={booking.id}>
+										<TableCell>{idx + 1}</TableCell>
+										<TableCell>
+											{slugToTitle(getProblem(booking, user.id))}
+										</TableCell>
+										<TableCell>
+											<Badge variant={STATUS_COLORS[booking.status].variant}>
+												{booking.status}
+											</Badge>
+										</TableCell>
+										<TableCell>
+											{formatDate(booking.date, "MMM d yyyy")}{" "}
+										</TableCell>
+										<TableCell>
+											{formatDate(booking.startTime, "HH:mm aa")}
+										</TableCell>
+										<TableCell>
+											<Button
+												disabled={diff < 0 || booking.status === "CANCELLED"}
+												size={"sm"}
+												variant={"link"}
+											>
+												<Link href={`/booking/${booking.id}`}>
+													{diff > 0 ? (
+														<>
+															{days > 0
+																? `Starts in ${days} day${days > 1 ? "s" : ""}`
+																: hours > 0
+																? `Starts in ${hours} hour${
+																		hours > 1 ? "s" : ""
+																  }`
+																: minutes > 0
+																? `Starts in ${minutes} minute${
+																		minutes > 1 ? "s" : ""
+																  }`
+																: `Starts in ${seconds} second${
+																		seconds > 1 ? "s" : ""
+																  }`}
+														</>
+													) : diff === 0 ? (
+														"Join"
+													) : (
+														"Cancelled"
+													)}
+												</Link>
+											</Button>
+										</TableCell>
+									</TableRow>
+								);
+							})}
+						</TableBody>
+					</Table>
+				)}
 			</CardContent>
 			{bookings?.length === 5 && (
 				<CardFooter>

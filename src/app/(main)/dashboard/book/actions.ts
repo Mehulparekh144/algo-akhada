@@ -2,12 +2,12 @@
 
 import { getUser } from "@/app/actions";
 import { prisma } from "@/lib/prisma";
-import { getProblems } from "@/lib/problemsClient";
+
 import {
 	BookingValues,
 	DifficultyValues,
-	ProblemSetQuestionList,
 } from "@/lib/validations";
+import { Problem } from "@prisma/client";
 import { sample } from "lodash";
 
 export async function getValidTimes(date: Date) {
@@ -91,13 +91,10 @@ export async function createBooking(values: BookingValues) {
 	}
 
 	// GET problem
-	const { problemsetQuestionList } = await getProblems();
-	const problem1 = sample(
-		getValidRandomProblem(values.difficulty, problemsetQuestionList)
-	);
-	const problem2 = sample(
-		getValidRandomProblem(bookings[0].difficulty, problemsetQuestionList)
-	);
+
+	const problem1 = await getValidRandomProblem(bookings[0].difficulty);
+	const problem2 = await getValidRandomProblem(values.difficulty);
+
 
 	const booking = await prisma.booking.update({
 		where: {
@@ -114,38 +111,65 @@ export async function createBooking(values: BookingValues) {
 	return booking.id;
 }
 
-function getValidRandomProblem(
-	difficulty: DifficultyValues,
-	problemsetQuestionList: ProblemSetQuestionList
-): ProblemSetQuestionList {
-	let problems;
+async function getValidRandomProblem(
+	difficulty: DifficultyValues
+): Promise<Problem> {
+	let problems: Problem[] = [];
 	switch (difficulty) {
 		case "NOVICE":
-			problems = problemsetQuestionList.filter(
-				(problem) => problem.difficulty === "Easy"
-			);
-			break;
+			problems = await prisma.problem.findMany({
+				where: {
+					difficulty: "Easy"
+				}
+			})
 
 		case "INTERMEDIATE":
-			problems = problemsetQuestionList.filter(
-				(problem) =>
-					problem.difficulty === "Medium" ||
-					(problem.difficulty === "Easy" && problem.acRate < 20)
-			);
-			break;
-
+			problems = await prisma.problem.findMany({
+				where: {
+					OR: [
+						{
+							difficulty: "Easy",
+							acRate: {
+								lte: 40
+							}
+						},
+						{
+							difficulty: "Medium",
+							acRate: {
+								gte: 60
+							}
+						}
+					]
+				}
+			})
 		case "EXPERT":
-			problems = problemsetQuestionList.filter(
-				(problem) =>
-					problem.difficulty === "Hard" ||
-					(problem.difficulty === "Medium" && problem.acRate < 20)
-			);
+
+			problems = await prisma.problem.findMany({
+
+				where: {
+					OR: [
+						{
+							difficulty: "Medium",
+							acRate: {
+								lte: 40
+							}
+						},
+						{
+							difficulty: "Hard"
+						}
+					]
+				}
+			})
+
 			break;
 
 		default:
-			problems = problemsetQuestionList;
+			problems = []
 			break;
 	}
-
-	return problems;
+	const problem = sample(problems);
+	if (!problem) {
+		throw new Error("No valid problem found");
+	}
+	return problem;
 }

@@ -1,5 +1,10 @@
+import { UniqueProblem } from "@/lib/validations";
 import React from "react";
 
-export default function TestCases() {
-	return <div>TestCases</div>;
+interface TestCasesProps {
+	problem: UniqueProblem;
+}
+
+export default function TestCases({ problem }: TestCasesProps) {
+	return <div>{problem.exampleTestcases}</div>;
 }
