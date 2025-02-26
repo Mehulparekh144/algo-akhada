@@ -32,10 +32,10 @@ export async function getValidTimes(date: Date) {
 	const isTimeSlotAvailable = (startTime: string) => {
 		return !bookings.some((booking) => {
 			const bookingStart = new Date(booking.startTime);
-			const bookingEnd = new Date(bookingStart.getTime() + 30 * 60000);
+			const bookingEnd = new Date(bookingStart.getTime() + 60 * 60000);
 
 			const slotStart = new Date(startTime);
-			const slotEnd = new Date(slotStart.getTime() + 30 * 60000);
+			const slotEnd = new Date(slotStart.getTime() + 60 * 60000);
 
 			return slotStart < bookingEnd && slotEnd > bookingStart;
 		});
@@ -47,7 +47,7 @@ export async function getValidTimes(date: Date) {
 
 	for (let i = 0; i < 18; i++) {
 		// 7:00 - 10:30
-		const slot = new Date(startOfDay.getTime() + i * 30 * 60000);
+		const slot = new Date(startOfDay.getTime() + i * 60 * 60000);
 		if (isTimeSlotAvailable(slot.toISOString())) {
 			timeSlots.push(slot);
 		}

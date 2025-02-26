@@ -10,16 +10,29 @@ export async function getBooking(id: string) {
     include: {
       user1: true,
       user2: true,
+      problem1: true,
+      problem2: true,
     }
   })
 
   return booking
 }
 
-export async function getProblemById(slug: string) {
-  return await prisma.problem.findUnique({
-    where: {
-      titleSlug: slug
+export async function completeBooking(id : string){
+  await prisma.booking.update({
+    where : {id},
+    data : {
+      status : "COMPLETED"
     }
   })
 }
+
+export async function cancelBooking(id : string){
+  await prisma.booking.update({
+    where : {id},
+    data : {
+      status : "CANCELLED"
+    }
+  })
+}
+
