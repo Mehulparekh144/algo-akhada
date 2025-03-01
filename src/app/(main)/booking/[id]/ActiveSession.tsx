@@ -1,11 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Problem } from "@prisma/client";
 import { User } from "better-auth";
 import DOMPurify from "dompurify";
-import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import noHints from "@/assets/images/nohints.png";
 import { completeBooking } from "./actions";
@@ -56,13 +55,11 @@ export default function ActiveSession({
       setTimeLeft(data.timeLeft);
     });
 
-    channel.bind("phase-change", (data: { phase: Phase }) => {
-      console.log("Phase change", data);
-      setActivePhase(data.phase);
+    channel.bind("phase-change", (data: { phase: { phase: Phase } }) => {
+      console.log("Phase change", data.phase.phase);
+      setActivePhase(data.phase.phase);
 
-      console.log(data.phase === Phase.phase2);
-
-      if (data.phase === Phase.phase2) {
+      if (data.phase.phase === Phase.phase2) {
         setTimeLeft(30 * 60);
       }
     });
