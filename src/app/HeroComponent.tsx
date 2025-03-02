@@ -113,7 +113,7 @@ export default function HeroComponent() {
     <div className="w-full min-h-screen flex flex-col items-center justify-center">
       <BackgroundLines className="flex flex-col h-full items-center justify-center space-y-4">
         <div className="flex flex-col h-screen items-center justify-center px-10 max-w-8xl md:max-w-6xl lg:max-w-4xl space-y-3 w-full">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold">
+          <h1 className="text-5xl md:text-6xl font-display lg:text-7xl font-bold">
             AlgoAkhada
           </h1>
           <TextGenerateEffect
@@ -128,7 +128,7 @@ export default function HeroComponent() {
       {/* Features */}
       <div className="bg-primary-foreground border-t-2 border-b-2 w-full flex items-center justify-center min-h-screen">
         <div className="flex items-center h-full justify-center flex-col max-w-8xl md:max-w-7xl lg:max-w-6xl w-full py-10">
-          <h2 className="text-3xl md:text-4xl mt-12 font-bold">
+          <h2 className="text-3xl font-display md:text-4xl mt-12 font-bold">
             Why choose Algoakhada ?{" "}
           </h2>
           <p className="text-muted-foreground text-center max-w-lg py-4">
@@ -145,8 +145,10 @@ export default function HeroComponent() {
 
       {/* Steps */}
       <div className="border-2 mt-auto w-full flex items-center justify-center ">
-        <div className="flex flex-col items-center justify-between max-w-8xl md:max-w-7xl lg:max-w-6xl w-full px-4 py-10">
-          <h2 className="text-3xl md:text-4xl font-bold">How It Works</h2>
+        <div className="flex flex-col items-center justify-between max-w-8xl md:max-w-7xl lg:max-w-6xl w-full px-4 py-14">
+          <h2 className="text-3xl font-display md:text-4xl mt-12 font-bold">
+            How It Works
+          </h2>
           <p className="text-muted-foreground text-center max-w-lg py-4">
             Get started in minutes
           </p>
@@ -271,7 +273,7 @@ function FeatureSection({
           {title}
         </span>
       </div>
-      <p className="text-sm text-neutral-600 dark:text-neutral-300 max-w-xs relative z-10 px-10">
+      <p className="text-sm text-muted-foreground max-w-xs relative z-10 px-10">
         {description}
       </p>
     </div>
