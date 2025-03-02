@@ -4,17 +4,18 @@ import { prisma } from "./prisma";
 import { env } from "@/env";
 
 export const auth = betterAuth({
-	database: prismaAdapter(prisma, {
-		provider: "postgresql",
-	}),
-	emailAndPassword: {
-		enabled: true,
-		minPasswordLength: 6,
-	},
-	socialProviders: {
-		github: {
-			clientId: env.AUTH_GITHUB_ID,
-			clientSecret: env.AUTH_GITHUB_SECRET,
-		},
-	},
+  baseURL: env.BETTER_AUTH_URL,
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
+  }),
+  emailAndPassword: {
+    enabled: true,
+    minPasswordLength: 6,
+  },
+  socialProviders: {
+    github: {
+      clientId: env.AUTH_GITHUB_ID,
+      clientSecret: env.AUTH_GITHUB_SECRET,
+    },
+  },
 });
