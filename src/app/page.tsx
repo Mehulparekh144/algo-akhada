@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { getUser } from "./actions";
 import HeroComponent from "./HeroComponent";
 
+// commentr
 export default async function Home() {
   const session = await getUser();
   return <HeroComponent />;
