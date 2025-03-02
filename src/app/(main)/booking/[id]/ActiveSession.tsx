@@ -168,7 +168,7 @@ export default function ActiveSession({
   };
 
   useEffect(() => {
-    // openInNewWindow();
+    openInNewWindow();
   }, [activePhase, isUser1, problem1, problem2]);
 
   let content;
