@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 
 export default function Signin() {
 	const [loading, setLoading] = React.useState(false);
+	const [githubLoading, setGithubLoading] = React.useState(false);
 	const form = useForm<LoginValues>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
@@ -66,13 +67,27 @@ export default function Signin() {
 	}
 
 	async function socialSignin() {
-		try {
-			await authClient.signIn.social({
+		await authClient.signIn.social(
+			{
 				provider: "github",
-			});
-		} catch (error) {
-			console.error(error);
-		}
+				callbackURL: "/dashboard",
+			},
+			{
+				onError(context) {
+					toast({
+						title: "Error",
+						description: context.error.message,
+						variant: "destructive",
+					});
+				},
+				onRequest: () => {
+					setGithubLoading(true);
+				},
+				onSuccess: () => {
+					setGithubLoading(false);
+				},
+			}
+		);
 	}
 
 	return (
@@ -121,8 +136,13 @@ export default function Signin() {
 							)}
 						/>
 						<Button className="w-full" disabled={loading}>
-							{loading && <Loader2 className="animate-spin" />}
-							Sign in
+							{loading ? (
+								<>
+									<Loader2 className="animate-spin" /> Signing in{" "}
+								</>
+							) : (
+								"Sign in"
+							)}
 						</Button>
 					</form>
 				</Form>
@@ -136,9 +156,18 @@ export default function Signin() {
 					variant={"secondary"}
 					onClick={socialSignin}
 					className="w-full"
+					disabled={githubLoading}
 					type="button"
 				>
-					Sign in with Github <GithubIcon />
+					{githubLoading ? (
+						<>
+							<Loader2 className="animate-spin" /> Signing in <GithubIcon />
+						</>
+					) : (
+						<>
+							Sign in with Github <GithubIcon />
+						</>
+					)}
 				</Button>
 			</CardContent>
 			<CardFooter className="text-sm text-muted-foreground">
