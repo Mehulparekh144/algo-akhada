@@ -144,7 +144,7 @@ export default function HeroComponent() {
       </div>
 
       {/* Steps */}
-      <div className="bg-primary-foreground border-2 mt-auto w-full flex items-center justify-center ">
+      <div className="border-2 mt-auto w-full flex items-center justify-center ">
         <div className="flex flex-col items-center justify-between max-w-8xl md:max-w-7xl lg:max-w-6xl w-full px-4 py-10">
           <h2 className="text-3xl md:text-4xl font-bold">How It Works</h2>
           <p className="text-muted-foreground text-center max-w-lg py-4">
