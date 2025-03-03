@@ -1,4 +1,3 @@
-import { getUser } from "./actions";
 import HeroComponent from "./HeroComponent";
 
 export default async function Home() {
