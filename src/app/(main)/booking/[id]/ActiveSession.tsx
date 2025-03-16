@@ -7,7 +7,6 @@ import type { User } from "better-auth";
 import DOMPurify from "dompurify";
 import { useEffect, useState, useCallback, useRef } from "react";
 import noHints from "@/assets/images/nohints.png";
-import { completeBooking } from "./actions";
 import Pusher from "pusher-js";
 import type { PresenceChannel } from "pusher-js";
 import { env } from "@/env";
@@ -70,7 +69,6 @@ export default function ActiveSession({
 		});
 
 		channel.bind("end-session", async () => {
-			await completeBooking(bookingId);
 			window.location.href = `/booking/${bookingId}/feedback`;
 		});
 
@@ -119,7 +117,6 @@ export default function ActiveSession({
 			setActivePhase(Phase.phase2);
 			setTimeLeft(30 * 60);
 		} else {
-			await completeBooking(bookingId);
 			window.location.href = `/booking/${bookingId}/feedback`;
 		}
 	}, [activePhase, bookingId]);
