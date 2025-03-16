@@ -53,6 +53,7 @@ export default async function CurrentBookingPage({
 				otherUserId={otherUserId}
 				currentUserName={currentUserName}
 				otherUserName={otherUserName}
+				booking={booking}
 				fallback={
 					<ActiveSession
 						bookingId={id}
