@@ -37,16 +37,24 @@ export const bookingSchema = z.object({
     })
     .min(new Date(), "Date must be in the future"),
   startTime: z.string().refine((value) => {
-    return !isNaN(Date.parse(value));
+    return !Number.isNaN(Date.parse(value));
   }, {
     message: "Invalid date format for starttime",
   }),
   difficulty: difficultySchema,
 })
 
-
-
 export type BookingValues = z.infer<typeof bookingSchema>
 export type DifficultyValues = z.infer<typeof bookingSchema>['difficulty']
 
+export const feedbackSchema = z.object({
+  rating: z.number().int().positive().min(1).max(5),
+  additionalComments: z.string().optional(),
+  didUserSolve: z.boolean(),
+  whatDidUserDoRight: z.string().min(10, "Please provide at least 10 characters about what they did well"),
+  whatDidUserDoWrong: z.string().min(10, "Please provide at least 10 characters about what they could have done better"),
+  howCanUserImprove: z.string().min(10, "Please provide at least 10 characters with suggestions for improvement"),
+});
+
+export type FeedbackValues = z.infer<typeof feedbackSchema>
 
