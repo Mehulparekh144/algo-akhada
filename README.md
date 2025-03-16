@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AlgoAkhada 🚀
 
-## Getting Started
+AlgoAkhada is a dynamic platform that connects developers for collaborative problem-solving sessions. Practice coding interviews, learn from peers, and enhance your algorithmic thinking in real-time.
 
-First, run the development server:
+## ✨ Features
+
+- **Peer-to-Peer Sessions**: Connect with fellow developers for collaborative problem-solving
+- **Smart Problem Matching**: Get problems tailored to your skill level
+- **Real-time Collaboration**: Work together in synchronized coding sessions
+- **Progress Tracking**: Monitor your improvement over time
+- **Scheduling System**: Book sessions that fit your calendar
+- **Instant Feedback**: Get immediate insights after each session
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18.0.0 or higher
+- npm or yarn
+- Docker and Docker Compose (for local development)
+- PostgreSQL database (automatically set up with Docker)
+
+### Database Setup
+
+#### Using Docker (Recommended)
+
+1. Start the PostgreSQL container:
+
+```bash
+docker-compose up -d
+```
+
+This will create a PostgreSQL instance with the following default configuration:
+
+- Host: localhost
+- Port: 5432
+- Database: algoakhada
+- Username: postgres
+- Password: password
+
+You can customize these values by setting environment variables before running docker-compose:
+
+```bash
+export POSTGRES_USER=myuser
+export POSTGRES_PASSWORD=mypassword
+export POSTGRES_DB=mydb
+docker-compose up -d
+```
+
+#### Manual PostgreSQL Setup
+
+If you prefer to use your own PostgreSQL installation:
+
+1. Install PostgreSQL on your system
+2. Create a new database
+3. Update the DATABASE_URL in your .env file
+
+### Installation
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/algoakhada.git
+cd algoakhada
+```
+
+2. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Set up environment variables
+
+```bash
+cp .env.example .env
+```
+
+4. Run database migrations
+
+```bash
+npx prisma migrate dev
+```
+
+5. Start the development server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework**: Next.js 14
+- **Database**: PostgreSQL with Prisma
+- **Authentication**: NextAuth.js
+- **Styling**: Tailwind CSS
+- **State Management**: React Context
+- **Real-time Communication**: Pusher
+- **Container**: Docker & Docker Compose
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📱 Screenshots
 
-## Learn More
+[Add screenshots of your application here]
 
-To learn more about Next.js, take a look at the following resources:
+## 🤝 Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+We welcome contributions! Please follow these steps:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## Deploy on Vercel
+## 📄 License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 👥 Team
+
+- [Your Name](https://github.com/yourusername) - Lead Developer
+- [Team Member](https://github.com/teammember) - Frontend Developer
+- [Team Member](https://github.com/teammember) - Backend Developer
+
+## 🙏 Acknowledgments
+
+- Thanks to all contributors who have helped shape AlgoAkhada
+- Special thanks to our early users for their valuable feedback
+- Inspired by the coding interview preparation community
+
+## 📞 Contact
+
+Have questions? Reach out to us:
+
+- Email: support@algoakhada.com
+- Twitter: [@algoakhada](https://twitter.com/algoakhada)
+- Discord: [Join our community](https://discord.gg/algoakhada)
+
+---
+
+<p align="center">Made with ❤️ by the AlgoAkhada Team</p>

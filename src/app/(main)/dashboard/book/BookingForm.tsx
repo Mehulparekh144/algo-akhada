@@ -16,7 +16,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { bookingSchema, BookingValues } from "@/lib/validations";
+import { bookingSchema, type BookingValues } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { LogOutIcon } from "lucide-react";
-import { User } from "better-auth";
+import type { User } from "better-auth";
 import { authClient } from "@/lib/auth-client";
 
 const FALLBACK_STRING = "https://github.com/shadcn.png";
@@ -39,10 +39,7 @@ function UserSignoutDropdown({ user }: { user: User | undefined }) {
 					</Avatar>
 				</div>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent
-				side="right"
-				className="w-[--radix-popper-anchor-width]"
-			>
+			<DropdownMenuContent side="right" className="">
 				<DropdownMenuItem>
 					<Button className="w-full" variant={"ghost"} onClick={signOut}>
 						Signout <LogOutIcon className="ml-auto" />{" "}

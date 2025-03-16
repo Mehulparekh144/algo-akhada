@@ -1,3 +1,6 @@
+import type { Booking, BookingStatus } from "@prisma/client";
+import type { User } from "better-auth";
+import { getTopFivePastBookings } from "./actions";
 import {
 	Table,
 	TableBody,
@@ -6,19 +9,15 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { getTopFiveUpcomingBookings } from "./actions";
-import { formatDate, intervalToDuration } from "date-fns";
-import type { Booking, BookingStatus } from "@prisma/client";
-import type { User } from "better-auth";
 import { Badge, type badgeVariants } from "@/components/ui/badge";
-import type { VariantProps } from "class-variance-authority";
+import { formatDate } from "date-fns";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { VariantProps } from "class-variance-authority";
 
-interface UpcomingBookingsProps {
+interface PastBookingsProps {
 	user: User;
 }
-
 const STATUS_COLORS: Record<
 	BookingStatus,
 	VariantProps<typeof badgeVariants>
@@ -29,11 +28,8 @@ const STATUS_COLORS: Record<
 	COMPLETED: { variant: "default" },
 };
 
-export default async function UpcomingBookings({
-	user,
-}: UpcomingBookingsProps) {
-	const bookings = await getTopFiveUpcomingBookings();
-
+export const PastBookings = async ({ user }: PastBookingsProps) => {
+	const bookings = await getTopFivePastBookings();
 	function getProblem(booking: Booking, userId: string) {
 		if (booking.user1Id === userId) {
 			return booking?.problem2Id;
@@ -51,40 +47,13 @@ export default async function UpcomingBookings({
 			.join(" ");
 	}
 
-	function getDifferenceInMS(bigger: Date, smaller: Date) {
-		return bigger.getTime() - smaller.getTime();
-	}
-
-	function getDifferencesInAll(bigger: Date, smaller: Date) {
-		let { days, hours, minutes, seconds } = intervalToDuration({
-			start: smaller,
-			end: bigger,
-		});
-		if (!days) {
-			days = 0;
-		}
-		if (!hours) {
-			hours = 0;
-		}
-		if (!minutes) {
-			minutes = 0;
-		}
-		if (!seconds) {
-			seconds = 0;
-		}
-
-		return { days, hours, minutes, seconds };
-	}
-
 	return (
 		<div className="p-4 space-y-3">
-			<h2 className="text-xl font-display font-semibold">Upcoming Bookings</h2>
+			<h2 className="text-xl font-display font-semibold">Past Bookings</h2>
 			<div>
 				{!bookings?.length ? (
 					<div className="text-center">
-						<p className="text-muted-foreground text-sm">
-							No upcoming bookings
-						</p>
+						<p className="text-muted-foreground text-sm">No past bookings</p>
 					</div>
 				) : (
 					<Table>
@@ -95,17 +64,11 @@ export default async function UpcomingBookings({
 								<TableHead>Status</TableHead>
 								<TableHead>Date</TableHead>
 								<TableHead>Time</TableHead>
-								<TableHead>Action</TableHead>
+								<TableHead>Feedback</TableHead>
 							</TableRow>
 						</TableHeader>
 						<TableBody>
 							{bookings?.map((booking, idx) => {
-								const diff = getDifferenceInMS(booking.date, new Date());
-								const { days, hours, minutes, seconds } = getDifferencesInAll(
-									booking.date,
-									new Date(),
-								);
-
 								return (
 									<TableRow key={booking.id}>
 										<TableCell>{idx + 1}</TableCell>
@@ -124,33 +87,9 @@ export default async function UpcomingBookings({
 											{formatDate(booking.startTime, "HH:mm aa")}
 										</TableCell>
 										<TableCell>
-											<Button
-												disabled={diff < 0 || booking.status === "CANCELLED"}
-												size={"sm"}
-												variant={"link"}
-											>
-												<Link href={`/booking/${booking.id}`}>
-													{diff > 0 ? (
-														<>
-															{days > 0
-																? `Starts in ${days} day${days > 1 ? "s" : ""}`
-																: hours > 0
-																	? `Starts in ${hours} hour${
-																			hours > 1 ? "s" : ""
-																		}`
-																	: minutes > 0
-																		? `Starts in ${minutes} minute${
-																				minutes > 1 ? "s" : ""
-																			}`
-																		: `Starts in ${seconds} second${
-																				seconds > 1 ? "s" : ""
-																			}`}
-														</>
-													) : diff === 0 ? (
-														"Join"
-													) : (
-														"Cancelled"
-													)}
+											<Button variant={"link"} asChild>
+												<Link href={`/dashboard/feedback/${booking.id}`}>
+													View Feedback
 												</Link>
 											</Button>
 										</TableCell>
@@ -161,7 +100,7 @@ export default async function UpcomingBookings({
 					</Table>
 				)}
 			</div>
-			{bookings?.length === 5 && (
+			{bookings?.length && bookings?.length > 5 && (
 				<div className="text-center">
 					<Link
 						href={"/dashboard/bookings"}
@@ -173,4 +112,4 @@ export default async function UpcomingBookings({
 			)}
 		</div>
 	);
-}
+};
