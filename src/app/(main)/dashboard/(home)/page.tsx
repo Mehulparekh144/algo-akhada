@@ -7,13 +7,10 @@ import Link from "next/link";
 import { PastBookings } from "./PastBookings";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { Calendar } from "lucide-react";
 
 async function DashboardPage() {
 	const session = await getUser();
-	if (!session) {
-		redirect("/signin");
-	}
 
 	return (
 		<div className="w-full min-h-screen p-6 relative">
@@ -30,9 +27,9 @@ async function DashboardPage() {
 			</Card>
 
 			<div className="space-y-8 mb-20">
-				<UpcomingBookings user={session.user} />
+				<UpcomingBookings user={session?.user} />
 				<Separator className="my-8" />
-				<PastBookings user={session.user} />
+				<PastBookings user={session?.user} />
 			</div>
 
 			<div className="fixed bottom-8 right-8">
@@ -43,7 +40,7 @@ async function DashboardPage() {
 				>
 					<Link href="/dashboard/book" className="flex items-center gap-2">
 						<span>Book an Akhada</span>
-						<ArrowRight className="h-5 w-5" />
+						<Calendar className="h-5 w-5" />
 					</Link>
 				</Button>
 			</div>

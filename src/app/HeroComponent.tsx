@@ -25,6 +25,7 @@ import {
 import { HeroStepper } from "./(main)/HeroStepper";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import { HeroPill } from "@/components/ui/hero-pill";
 
 const FEATURES = [
 	{
@@ -129,6 +130,12 @@ export default function HeroComponent() {
 
 				{/* Content */}
 				<div className="relative flex flex-col h-screen items-center justify-center px-10 max-w-8xl md:max-w-6xl lg:max-w-4xl space-y-8 w-full mx-auto">
+					<HeroPill
+						href="" // TODO: Purchase link
+						label="50% off on PRO for first 100 users"
+						announcement="🎉 Discount"
+						isExternal
+					/>
 					<div className="relative">
 						<div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-lg blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200 animate-gradient-xy" />
 						<h1 className="relative text-5xl md:text-6xl font-display lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 text-center">

@@ -64,10 +64,14 @@ export default function BookingForm() {
 			await createBooking(values);
 			window.location.href = "/dashboard";
 		} catch (error) {
-			console.error(error);
 			toast({
-				title: "Error",
-				description: "Failed to create booking.",
+				title: error instanceof Error ? error.message : "Error",
+				description:
+					error instanceof Error
+						? error.message.includes("pending feedback")
+							? "Please complete your pending feedbacks before booking new sessions."
+							: "Failed to create booking."
+						: "Failed to create booking.",
 				variant: "destructive",
 			});
 		} finally {

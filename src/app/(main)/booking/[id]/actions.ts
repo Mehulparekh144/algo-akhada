@@ -1,7 +1,9 @@
 "use server"
 
+import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { feedbackSchema, type FeedbackValues } from "@/lib/validations"
+import { headers } from "next/headers"
 
 
 
@@ -51,13 +53,20 @@ export async function provideFeedback(bookingId: string, feedback: FeedbackValue
   try {
     const { rating, didUserSolve, whatDidUserDoRight, whatDidUserDoWrong, howCanUserImprove, additionalComments } = feedbackSchema.parse(feedback);
 
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user) {
+      throw new Error("Unauthorized")
+    }
+
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
       select: {
         user1Id: true,
         user2Id: true,
-        feedback1Id: true,
-        feedback2Id: true
+        feedbacks: true
       }
     });
 
@@ -69,6 +78,7 @@ export async function provideFeedback(bookingId: string, feedback: FeedbackValue
     const newFeedback = await prisma.feedback.create({
       data: {
         userId: otherUserId, // The user receiving the feedback
+        feedbackProviderId: session.user.id, // The user providing the feedback
         bookingId: bookingId,
         rating: rating,
         didUserSolve: didUserSolve,
@@ -76,18 +86,6 @@ export async function provideFeedback(bookingId: string, feedback: FeedbackValue
         whatDidUserDoWrong: whatDidUserDoWrong,
         howCanUserImprove: howCanUserImprove,
         additionalComments: additionalComments || "",
-      }
-    });
-
-    // Update the booking with the feedback reference
-    // If current user is user1, update feedback2Id (feedback for user2)
-    // If current user is user2, update feedback1Id (feedback for user1)
-    const isUser1 = booking.user1Id === otherUserId;
-
-    await prisma.booking.update({
-      where: { id: bookingId },
-      data: {
-        [isUser1 ? 'feedback2Id' : 'feedback1Id']: newFeedback.id
       }
     });
 
