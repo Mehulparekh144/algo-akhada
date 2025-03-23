@@ -85,7 +85,7 @@ const FeedbacksTable = ({
 	};
 
 	return (
-		<div className="bg-background flex flex-col gap-4">
+		<div className="bg-background h-[87vh] flex flex-col gap-4">
 			<div className="[&>div]:h-[38rem]">
 				<Table className="border-separate border-spacing-0 [&_td]:border-border [&_tfoot_td]:border-t [&_th]:border-b [&_th]:border-border [&_tr:not(:last-child)_td]:border-b [&_tr]:border-none">
 					<TableHeader className="sticky top-0 z-10 bg-background/90 backdrop-blur-sm">

@@ -18,6 +18,7 @@ export const env = createEnv({
     BETTER_AUTH_URL: z.string().url(),
     BETTER_AUTH_SECRET: z.string().min(1),
     PUSHER_SECRET: z.string().min(1),
+    GEMINI_API_KEY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_PUSHER_KEY: z.string().min(1),
