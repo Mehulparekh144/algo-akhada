@@ -15,9 +15,10 @@ const CustomBreadcrumbs = ({
 	return (
 		<Breadcrumb>
 			<BreadcrumbList>
-				{breadcrumbs.map((breadcrumb) => (
+				{breadcrumbs.map((breadcrumb, i) => (
 					<>
-						<BreadcrumbItem key={breadcrumb.href}>
+						{/* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */}
+						<BreadcrumbItem key={breadcrumb.href + i}>
 							<BreadcrumbLink href={breadcrumb.href}>
 								{breadcrumb.label}
 							</BreadcrumbLink>
