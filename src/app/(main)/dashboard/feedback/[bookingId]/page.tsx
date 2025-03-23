@@ -6,12 +6,24 @@ import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star } from "lucide-react";
+import CustomBreadcrumbs from "@/components/custom-breadcrumbs";
 
 const difficultyMap: Record<string, BadgeProps["variant"]> = {
 	Easy: "easy",
 	Medium: "medium",
 	Hard: "hard",
 };
+
+const breadcrumbs = [
+	{
+		href: "/dashboard",
+		label: "Dashboard",
+	},
+	{
+		href: "/dashboard/feedback",
+		label: "Feedbacks",
+	},
+];
 
 const UserFeedbackPage = async ({
 	params,
@@ -30,9 +42,10 @@ const UserFeedbackPage = async ({
 			: feedback.booking.problem2;
 
 	return (
-		<div className="w-screen h-screen mx-auto max-w-2xl flex items-center justify-center py-4">
-			<div className="w-full">
-				<p className="text-3xl font-semibold font-display">Feedback</p>
+		<div className="w-full h-screen px-4 py-4 md:py-8">
+			<CustomBreadcrumbs breadcrumbs={breadcrumbs} currentPage="Feedback" />
+			<div className="w-full mt-4">
+				<p className="text-2xl font-semibold font-display">Feedback</p>
 				<Separator className="my-2" />
 				<div className="flex justify-between items-center gap-3">
 					<Link

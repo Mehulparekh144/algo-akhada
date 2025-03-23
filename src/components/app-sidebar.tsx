@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Home, MessageCircle, Settings } from "lucide-react";
+import { BarChart, Home, MessageCircle, Settings } from "lucide-react";
 import { getUser } from "@/app/actions";
 
 const MENU_ITEMS = [
@@ -29,6 +29,11 @@ const MENU_ITEMS = [
 		href: "/dashboard/feedback",
 		icon: MessageCircle,
 		text: "Feedbacks",
+	},
+	{
+		href: "/dashboard/stats",
+		icon: BarChart,
+		text: "Stats",
 	},
 ];
 

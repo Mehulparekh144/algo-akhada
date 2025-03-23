@@ -15,5 +15,4 @@ async function DashboardLayout({ children }: DashboardLayoutProps) {
 		</SidebarProvider>
 	);
 }
-
 export default DashboardLayout;
