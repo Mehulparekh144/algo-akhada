@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import type { VariantProps } from "class-variance-authority";
 
 interface PastBookingsProps {
-	user: User;
+	user: User | undefined;
 }
 const STATUS_COLORS: Record<
 	BookingStatus,
@@ -73,7 +73,7 @@ export const PastBookings = async ({ user }: PastBookingsProps) => {
 									<TableRow key={booking.id}>
 										<TableCell>{idx + 1}</TableCell>
 										<TableCell>
-											{slugToTitle(getProblem(booking, user.id))}
+											{slugToTitle(getProblem(booking, user?.id ?? ""))}
 										</TableCell>
 										<TableCell>
 											<Badge variant={STATUS_COLORS[booking.status].variant}>
@@ -100,7 +100,7 @@ export const PastBookings = async ({ user }: PastBookingsProps) => {
 					</Table>
 				)}
 			</div>
-			{bookings?.length && bookings?.length > 5 && (
+			{bookings && bookings?.length >= 5 && (
 				<div className="text-center">
 					<Link
 						href={"/dashboard/bookings"}

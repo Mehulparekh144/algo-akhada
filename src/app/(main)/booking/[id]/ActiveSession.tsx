@@ -10,6 +10,7 @@ import noHints from "@/assets/images/nohints.png";
 import Pusher from "pusher-js";
 import type { PresenceChannel } from "pusher-js";
 import { env } from "@/env";
+import { completeBooking } from "./actions";
 
 interface ActiveSessionProps {
 	bookingId: string;
@@ -69,6 +70,7 @@ export default function ActiveSession({
 		});
 
 		channel.bind("end-session", async () => {
+			await completeBooking(bookingId);
 			window.location.href = `/booking/${bookingId}/feedback`;
 		});
 
@@ -117,6 +119,7 @@ export default function ActiveSession({
 			setActivePhase(Phase.phase2);
 			setTimeLeft(30 * 60);
 		} else {
+			await completeBooking(bookingId);
 			window.location.href = `/booking/${bookingId}/feedback`;
 		}
 	}, [activePhase, bookingId]);
@@ -220,18 +223,25 @@ export default function ActiveSession({
 							<h2 className="text-xl font-semibold">Hints</h2>
 						</CardHeader>
 						<CardContent>
-							<ol className="list-decimal list-inside">
-								{problem2.hints.map((hint, idx) => {
-									const sanitizedHint = DOMPurify.sanitize(hint);
-									return (
-										<li
-											key={hint}
-											// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-											dangerouslySetInnerHTML={{ __html: sanitizedHint }}
-										/>
-									);
-								})}
-							</ol>
+							{!problem1.hints || problem1.hints.length === 0 ? (
+								<div className="flex flex-col items-center space-y-2 justify-center">
+									<img src={noHints.src} alt="No hints available" />
+									<p className="text-2xl font-semibold">No Hints</p>
+								</div>
+							) : (
+								<ol className="list-decimal list-inside">
+									{problem1.hints.map((hint, idx) => {
+										const sanitizedHint = DOMPurify.sanitize(hint);
+										return (
+											<li
+												key={hint}
+												// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+												dangerouslySetInnerHTML={{ __html: sanitizedHint }}
+											/>
+										);
+									})}
+								</ol>
+							)}
 						</CardContent>
 					</Card>
 				</div>
@@ -280,7 +290,7 @@ export default function ActiveSession({
 							<h2 className="text-xl font-semibold">Hints</h2>
 						</CardHeader>
 						<CardContent>
-							{problem1.hints.length === 0 ? (
+							{!problem1.hints || problem1.hints.length === 0 ? (
 								<div className="flex flex-col items-center space-y-2 justify-center">
 									<img src={noHints.src} alt="No hints available" />
 									<p className="text-2xl font-semibold">No Hints</p>

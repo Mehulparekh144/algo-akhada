@@ -16,7 +16,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 interface UpcomingBookingsProps {
-	user: User;
+	user: User | undefined;
 }
 
 const STATUS_COLORS: Record<
@@ -110,7 +110,7 @@ export default async function UpcomingBookings({
 									<TableRow key={booking.id}>
 										<TableCell>{idx + 1}</TableCell>
 										<TableCell>
-											{slugToTitle(getProblem(booking, user.id))}
+											{slugToTitle(getProblem(booking, user?.id ?? ""))}
 										</TableCell>
 										<TableCell>
 											<Badge variant={STATUS_COLORS[booking.status].variant}>
@@ -161,7 +161,7 @@ export default async function UpcomingBookings({
 					</Table>
 				)}
 			</div>
-			{bookings?.length === 5 && (
+			{bookings && bookings?.length >= 5 && (
 				<div className="text-center">
 					<Link
 						href={"/dashboard/bookings"}

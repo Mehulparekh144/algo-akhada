@@ -21,12 +21,16 @@ const badgeVariants = cva(
 					"border-transparent bg-red-500 text-primary-foreground shadow hover:bg-red-500/80",
 				booking_pending:
 					"border-transparent bg-yellow-500 text-primary-foreground shadow hover:bg-yellow-500/80",
+				hard: "bg-red-500 text-primary-foreground shadow hover:bg-red-500/80",
+				medium:
+					"bg-yellow-500 text-primary-foreground shadow hover:bg-yellow-500/80",
+				easy: "bg-green-500 text-primary-foreground shadow hover:bg-green-500/80",
 			},
 		},
 		defaultVariants: {
 			variant: "default",
 		},
-	}
+	},
 );
 
 export interface BadgeProps

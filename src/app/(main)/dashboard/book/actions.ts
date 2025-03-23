@@ -2,10 +2,15 @@
 
 import { getUser } from "@/app/actions";
 import { prisma } from "@/lib/prisma";
-
-import { BookingValues, DifficultyValues } from "@/lib/validations";
-import { Problem } from "@prisma/client";
+import type { BookingValues, DifficultyValues } from "@/lib/validations";
+import type { Problem } from "@prisma/client";
 import { sample } from "lodash";
+
+class OverdueFeedbackError extends Error {
+  constructor(message: string, public readonly code: string) {
+    super(message);
+  }
+}
 
 export async function getValidTimes(date: Date) {
   const session = await getUser();
@@ -53,6 +58,72 @@ export async function getValidTimes(date: Date) {
   return timeSlots;
 }
 
+export async function checkPendingFeedbacks(userId: string) {
+
+  const pendingBookings = await prisma.booking.findMany({
+    where: {
+      AND: [
+        {
+          OR: [
+            { user1Id: userId },
+            { user2Id: userId }
+          ]
+        },
+        {
+          status: "COMPLETED"
+        },
+      ]
+    },
+    include: {
+      user1: true,
+      user2: true,
+      feedbacks: true
+    }
+  })
+
+  const pendingFeedbacks = pendingBookings.filter(booking => booking.feedbacks.length < 2).map(booking => {
+    const { feedbacks } = booking;
+    const feedback = feedbacks.filter(f => f.feedbackProviderId !== userId);
+
+    if (feedback.length > 0) {
+      const bookingDate = new Date(booking.date);
+      const daysSinceBooking = Math.floor((new Date().getTime() - bookingDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      return {
+        bookingId: booking.id,
+        otherUserName: booking.user1Id === userId ? booking.user2?.name : booking.user1?.name,
+        daysSinceBooking,
+        isOverdue: daysSinceBooking > 3
+      }
+    }
+  }).filter(f => Boolean(f))
+
+  return pendingFeedbacks;
+
+
+  // const pendingFeedbacks = pendingBookings.map(booking => {
+  //   const feedback = booking.feedbacks.filter(f => f.userId === userId);
+  //   console.log(feedback)
+
+  //   if (feedback) {
+  //     const isUser1 = booking.user1Id === userId;
+  //     const otherUser = isUser1 ? booking.user2 : booking.user1;
+  //     const bookingDate = new Date(booking.date);
+  //     const daysSinceBooking = Math.floor((new Date().getTime() - bookingDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  //     return {
+  //       bookingId: booking.id,
+  //       otherUserName: otherUser?.name || "Unknown User",
+  //       daysSinceBooking,
+  //       isOverdue: daysSinceBooking > 3
+  //     }
+  //   }
+  // })
+
+
+  // return pendingFeedbacks;
+}
+
 export async function createBooking(values: BookingValues) {
   const session = await getUser();
 
@@ -61,6 +132,18 @@ export async function createBooking(values: BookingValues) {
   }
 
   const { user } = session;
+
+  // Check for pending feedbacks
+  const pendingFeedbacks = await checkPendingFeedbacks(user.id);
+
+  if (pendingFeedbacks.length > 0) {
+    const overdueFeedbacks = pendingFeedbacks.filter(f => f?.isOverdue);
+    const warningMessage = overdueFeedbacks.length > 0
+      ? `You have ${overdueFeedbacks.length} overdue feedback(s) that are more than 3 days old. Please complete them before booking new sessions.`
+      : `You have ${pendingFeedbacks.length} pending feedback(s). Please complete them before booking new sessions.`;
+
+    throw new OverdueFeedbackError(warningMessage, "OVERDUE_FEEDBACK");
+  }
 
   const bookings = await prisma.booking.findMany({
     where: {
@@ -88,7 +171,6 @@ export async function createBooking(values: BookingValues) {
   }
 
   // GET problem
-
   const problem1 = await getValidRandomProblem(bookings[0].difficulty);
   const problem2 = await getValidRandomProblem(values.difficulty);
 
@@ -118,7 +200,7 @@ async function getValidRandomProblem(
           difficulty: "Easy",
         },
       });
-
+      break;
     case "INTERMEDIATE":
       problems = await prisma.problem.findMany({
         where: {
@@ -138,6 +220,7 @@ async function getValidRandomProblem(
           ],
         },
       });
+      break;
     case "EXPERT":
       problems = await prisma.problem.findMany({
         where: {
@@ -154,9 +237,7 @@ async function getValidRandomProblem(
           ],
         },
       });
-
       break;
-
     default:
       problems = [];
       break;

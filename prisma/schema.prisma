@@ -53,10 +53,7 @@ model Booking {
   user1      User              @relation("User1Bookings", fields: [user1Id], references: [id])
   user2      User?             @relation("User2Bookings", fields: [user2Id], references: [id])
 
-  feedback1Id String?
-  feedback2Id String?
-  feedback1   Feedback? @relation("Feedback1Bookings", fields: [feedback1Id], references: [id])
-  feedback2   Feedback? @relation("Feedback2Bookings", fields: [feedback2Id], references: [id])
+  feedbacks Feedback[]
 
   problem1 Problem? @relation("Problem1Bookings", fields: [problem1Id], references: [titleSlug])
   problem2 Problem? @relation("Problem2Bookings", fields: [problem2Id], references: [titleSlug])
@@ -67,6 +64,7 @@ model Booking {
 model Feedback {
   id                 String   @id @default(cuid())
   userId             String
+  feedbackProviderId String
   bookingId          String
   rating             Int
   additionalComments String?
@@ -77,11 +75,11 @@ model Feedback {
   whatDidUserDoWrong String
   howCanUserImprove  String
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User    @relation("UserFeedbacks", fields: [userId], references: [id], onDelete: Cascade)
+  feedbackProvider User    @relation("FeedbackProviderFeedbacks", fields: [feedbackProviderId], references: [id], onDelete: Cascade)
+  booking          Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
-  bookingUser2 Booking[] @relation("Feedback2Bookings")
-  bookingUser1 Booking[] @relation("Feedback1Bookings")
-
+  @@unique([bookingId, userId])
   @@map("feedback")
 }
 
@@ -99,7 +97,8 @@ model User {
   bookingsUser1 Booking[] @relation("User1Bookings")
   bookingsUser2 Booking[] @relation("User2Bookings")
 
-  feedbacks Feedback[]
+  feedbacksReceived Feedback[] @relation("UserFeedbacks")
+  feedbacksProvided Feedback[] @relation("FeedbackProviderFeedbacks")
 
   @@unique([email])
   @@map("user")

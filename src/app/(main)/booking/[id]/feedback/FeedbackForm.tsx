@@ -14,9 +14,9 @@ import { feedbackSchema, type FeedbackValues } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { User } from "@prisma/client";
 import { Loader2 } from "lucide-react";
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { completeBooking, provideFeedback } from "../actions";
+import { provideFeedback } from "../actions";
 import { useToast } from "@/hooks/use-toast";
 
 interface FeedbackFormProps {
@@ -46,7 +46,6 @@ const FeedbackForm = ({
 	async function onSubmit(values: FeedbackValues) {
 		try {
 			await provideFeedback(bookingId, values, otherUser.id);
-			await completeBooking(bookingId);
 
 			toast({
 				title: "Success",
@@ -155,7 +154,11 @@ const FeedbackForm = ({
 									What did the {otherUser.name} do right? ✅
 								</FormLabel>
 								<FormControl>
-									<Textarea placeholder="Write something..." {...field} />
+									<Textarea
+										placeholder="Write something..."
+										{...field}
+										required
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -171,7 +174,11 @@ const FeedbackForm = ({
 									What did the {otherUser.name} do wrong? ❌
 								</FormLabel>
 								<FormControl>
-									<Textarea placeholder="Write something..." {...field} />
+									<Textarea
+										placeholder="Write something..."
+										{...field}
+										required
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -185,7 +192,11 @@ const FeedbackForm = ({
 							<FormItem>
 								<FormLabel>How can the {otherUser.name} improve? 🔧</FormLabel>
 								<FormControl>
-									<Textarea placeholder="Write something..." {...field} />
+									<Textarea
+										placeholder="Write something..."
+										{...field}
+										required
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>

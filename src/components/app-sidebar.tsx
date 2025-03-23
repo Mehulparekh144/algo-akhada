@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Home, Settings } from "lucide-react";
-import ThemeButton from "./theme-button";
+import { BarChart, Home, MessageCircle, Settings } from "lucide-react";
 import { getUser } from "@/app/actions";
 
 const MENU_ITEMS = [
@@ -26,6 +25,16 @@ const MENU_ITEMS = [
 		icon: Settings,
 		text: "Settings",
 	},
+	{
+		href: "/dashboard/feedback",
+		icon: MessageCircle,
+		text: "Feedbacks",
+	},
+	{
+		href: "/dashboard/stats",
+		icon: BarChart,
+		text: "Stats",
+	},
 ];
 
 export async function AppSidebar() {
@@ -36,12 +45,10 @@ export async function AppSidebar() {
 			className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 		>
 			<SidebarHeader className="relative">
-				<div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 opacity-20" />
 				<Link
-					href={"/dashboard"}
+					href={"/"}
 					className={cn(
-						"relative z-10 flex items-center gap-2 px-6 py-4 text-2xl font-semibold font-display",
-						"bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary",
+						"relative z-10 flex items-center gap-2 px-6 py-2 text-2xl font-semibold font-display",
 					)}
 				>
 					AlgoAkhada
@@ -63,15 +70,7 @@ export async function AppSidebar() {
 				</SidebarMenu>
 			</SidebarContent>
 			<SidebarFooter className="border-t">
-				<SidebarMenu className="px-3 py-2">
-					<SidebarMenuItem>
-						<div className="px-3">
-							<ThemeButton />
-						</div>
-					</SidebarMenuItem>
-				</SidebarMenu>
-				<SidebarSeparator className="opacity-50" />
-				<SidebarMenu className="px-3 py-2">
+				<SidebarMenu className="">
 					<SidebarMenuItem>
 						<UserSignoutDropdown user={session?.user} />
 					</SidebarMenuItem>

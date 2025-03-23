@@ -15,6 +15,7 @@ import { Clock, ArrowLeftCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
+import { DotBackground } from "@/components/ui/dot-background";
 
 interface WaitingRoomProps {
 	bookingId: string;
@@ -218,32 +219,38 @@ export default function WaitingRoom({
 	// If it's not time for the session yet
 	if (!shouldStartSession()) {
 		return (
-			<main className="flex flex-col bg-secondary items-center justify-center min-h-screen p-4">
-				<div className="bg-background rounded-lg shadow-md p-8 max-w-md w-full text-center space-y-6">
-					<h2 className="text-2xl font-bold font-display mb-4">
-						Your Session Starts Soon
-					</h2>
-					<div className="bg-secondary/50 backdrop-blur-sm p-6 rounded-lg mb-6 border border-border/50">
-						<div className="flex items-center justify-center mb-4">
-							<Clock className="h-6 w-6 text-primary mr-2" />
-							<p className="text-muted-foreground">
-								Time until your session begins:
+			<main className="flex flex-col bg-background items-center justify-center min-h-screen p-4">
+				<DotBackground />
+				<div className="relative z-10 w-full max-w-md mx-4 md:mx-auto">
+					<div className="backdrop-blur-sm bg-white/10 ring-1 ring-primary/20 dark:bg-white/5 rounded-2xl p-3 shadow-xl">
+						<div className="bg-background rounded-lg shadow-md p-8 max-w-md w-full text-center space-y-6">
+							<h2 className="text-2xl font-bold font-display mb-4">
+								Your Session Starts Soon
+							</h2>
+							<div className="bg-secondary/50 backdrop-blur-sm p-6 rounded-lg mb-6 border border-border/50">
+								<div className="flex items-center justify-center mb-4">
+									<Clock className="h-6 w-6 text-primary mr-2" />
+									<p className="text-muted-foreground">
+										Time until your session begins:
+									</p>
+								</div>
+								<p className="text-3xl font-semibold font-display text-primary">
+									{sessionStartTime}
+								</p>
+							</div>
+							<p className="text-sm text-muted-foreground leading-relaxed">
+								Please return to this page when it's time for your session. The
+								waiting room will be activated 10 minutes before the scheduled
+								time.
 							</p>
+							<Button variant="outline" className="mt-4" asChild>
+								<Link href="/dashboard" className="flex items-center gap-2">
+									<ArrowLeftCircle className="h-4 w-4" />
+									Back to Dashboard
+								</Link>
+							</Button>
 						</div>
-						<p className="text-3xl font-semibold font-display text-primary">
-							{sessionStartTime}
-						</p>
 					</div>
-					<p className="text-sm text-muted-foreground leading-relaxed">
-						Please return to this page when it's time for your session. The
-						waiting room will be activated 10 minutes before the scheduled time.
-					</p>
-					<Button variant="outline" className="mt-4" asChild>
-						<Link href="/dashboard" className="flex items-center gap-2">
-							<ArrowLeftCircle className="h-4 w-4" />
-							Back to Dashboard
-						</Link>
-					</Button>
 				</div>
 			</main>
 		);
@@ -251,57 +258,62 @@ export default function WaitingRoom({
 
 	// Otherwise, show waiting room message
 	return (
-		<main className="flex flex-col bg-secondary items-center justify-center min-h-screen p-4">
-			<div className="bg-background rounded-lg shadow-md p-8 max-w-md w-full">
-				<div className="text-center mb-8 space-y-4">
-					<h2 className="text-2xl font-display font-bold">
-						Waiting for other participant
-					</h2>
-					<div className="bg-secondary/50 backdrop-blur-sm p-4 rounded-lg border border-border/50">
-						<p className="text-muted-foreground">
-							{otherUserName} hasn't joined the session yet. The session will
-							start automatically when they join.
-						</p>
-					</div>
-				</div>
-
-				<div className="space-y-6">
-					<div
-						className="bg-secondary/50 backdrop-blur-sm p-6 rounded-lg border border-border/50"
-						aria-live="polite"
-					>
-						<div className="text-center space-y-4">
-							<div className="flex items-center justify-center gap-2">
-								<Clock className="h-5 w-5 text-primary" />
+		<main className="flex flex-col bg-background items-center justify-center min-h-screen p-4">
+			<DotBackground />
+			<div className="relative z-10 w-full max-w-md mx-4 md:mx-auto">
+				<div className="backdrop-blur-sm bg-white/10 ring-1 ring-primary/20 dark:bg-white/5 rounded-2xl p-3 shadow-xl">
+					<div className="bg-background rounded-lg shadow-md p-8 max-w-md w-full">
+						<div className="text-center mb-8 space-y-4">
+							<h2 className="text-2xl font-display font-bold">
+								Waiting for other participant
+							</h2>
+							<div className="bg-secondary/50 backdrop-blur-sm p-4 rounded-lg border border-border/50">
 								<p className="text-muted-foreground">
-									Time remaining before redirect:
+									{otherUserName} hasn't joined the session yet. The session
+									will start automatically when they join.
 								</p>
 							</div>
-							<p
-								className="text-4xl font-mono font-bold text-primary"
-								aria-label={`${timeRemaining} seconds remaining`}
+						</div>
+
+						<div className="space-y-6">
+							<div
+								className="bg-secondary/50 backdrop-blur-sm p-6 rounded-lg border border-border/50"
+								aria-live="polite"
 							>
-								{formatTime(timeRemaining)}
+								<div className="text-center space-y-4">
+									<div className="flex items-center justify-center gap-2">
+										<Clock className="h-5 w-5 text-primary" />
+										<p className="text-muted-foreground">
+											Time remaining before redirect:
+										</p>
+									</div>
+									<p
+										className="text-4xl font-mono font-bold text-primary"
+										aria-label={`${timeRemaining} seconds remaining`}
+									>
+										{formatTime(timeRemaining)}
+									</p>
+									<Progress
+										value={calculateProgress(timeRemaining)}
+										className="h-2"
+									/>
+								</div>
+							</div>
+							<p className="text-sm text-muted-foreground text-center leading-relaxed">
+								If the other participant doesn't join within the remaining time,
+								you'll be redirected to the dashboard.
 							</p>
-							<Progress
-								value={calculateProgress(timeRemaining)}
-								className="h-2"
-							/>
+							<Button variant="outline" className="w-full" asChild>
+								<Link
+									href="/dashboard"
+									className="flex items-center justify-center gap-2"
+								>
+									<ArrowLeftCircle className="h-4 w-4" />
+									Back to Dashboard
+								</Link>
+							</Button>
 						</div>
 					</div>
-					<p className="text-sm text-muted-foreground text-center leading-relaxed">
-						If the other participant doesn't join within the remaining time,
-						you'll be redirected to the dashboard.
-					</p>
-					<Button variant="outline" className="w-full" asChild>
-						<Link
-							href="/dashboard"
-							className="flex items-center justify-center gap-2"
-						>
-							<ArrowLeftCircle className="h-4 w-4" />
-							Back to Dashboard
-						</Link>
-					</Button>
 				</div>
 			</div>
 		</main>
